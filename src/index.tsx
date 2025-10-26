@@ -1,4 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, {
+  useRef,
+  forwardRef,
+  useState,
+  useImperativeHandle,
+} from "react";
 import {
   Pressable,
   StyleSheet,
@@ -21,83 +26,98 @@ interface PinInputProps extends Omit<TextInputProps, "onChangeText"> {
   cellTextStyle?: StyleProp<TextStyle>;
 }
 
-const PinInput = ({
-  pinLength,
-  onPinChange,
-  onPinComplete,
-  containerStyle,
-  cellStyle,
-  focusedCellStyle,
-  cellTextStyle,
-  ...rest
-}: PinInputProps) => {
-  const [pin, setPin] = useState("");
-  const [focusedIndex, setFocusedIndex] = useState(-1);
-  const inputRef = useRef<TextInput>(null);
+const PinInput = forwardRef<TextInput, PinInputProps>(
+  (
+    {
+      pinLength = 6,
+      onPinChange,
+      onPinComplete,
+      containerStyle,
+      cellStyle,
+      focusedCellStyle,
+      cellTextStyle,
+      autoFocus = true,
+      ...rest
+    },
+    ref
+  ) => {
+    const [pin, setPin] = useState("");
+    const [focusedIndex, setFocusedIndex] = useState(-1);
+    const internalRef = useRef<TextInput>(null);
 
-  const handlePress = () => {
-    inputRef.current?.focus();
-  };
+    // This allows the parent component to call focus() and blur() on our component
+    useImperativeHandle(ref, () => internalRef.current as TextInput);
 
-  const handleFocus = () => {
-    const newFocusedIndex = pin.length < pinLength ? pin.length : pinLength - 1;
-    setFocusedIndex(newFocusedIndex);
-  };
+    const handlePress = () => {
+      internalRef.current?.focus();
+    };
 
-  const handleBlur = () => {
-    setFocusedIndex(-1);
-  };
+    const handleFocus = () => {
+      const newFocusedIndex =
+        pin.length < pinLength ? pin.length : pinLength - 1;
+      setFocusedIndex(newFocusedIndex);
+    };
 
-  const handleChangeText = (text: string) => {
-    const newPin = text.slice(0, pinLength);
-    setPin(newPin);
-    onPinChange?.(newPin);
+    const handleBlur = () => {
+      setFocusedIndex(-1);
+    };
 
-    if (newPin.length === pinLength) {
-      onPinComplete?.(newPin);
-      inputRef.current?.blur();
-    }
+    const handleChangeText = (text: string) => {
+      const newPin = text.slice(0, pinLength);
+      setPin(newPin);
+      onPinChange?.(newPin);
 
-    const newFocusedIndex =
-      newPin.length < pinLength ? newPin.length : pinLength - 1;
-    setFocusedIndex(newFocusedIndex);
-  };
+      if (newPin.length === pinLength) {
+        onPinComplete?.(newPin);
+        // inputRef.current?.blur();
+      }
 
-  return (
-    <View style={styles.rootContainer}>
-      <TextInput
-        ref={inputRef}
-        value={pin}
-        onChangeText={handleChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        maxLength={pinLength}
-        keyboardType="number-pad"
-        style={styles.hiddenInput}
-        {...rest}
-      />
-      <Pressable
-        onPress={handlePress}
-        style={[styles.container, containerStyle]}
-      >
-        {Array.from({ length: pinLength }).map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.cell,
-              cellStyle,
-              focusedIndex === index && (styles.focusedCell, focusedCellStyle),
-            ]}
-          >
-            <Text style={[styles.cellText, cellTextStyle]}>
-              {pin[index] || ""}
-            </Text>
-          </View>
-        ))}
-      </Pressable>
-    </View>
-  );
-};
+      const newFocusedIndex =
+        newPin.length < pinLength ? newPin.length : pinLength - 1;
+      setFocusedIndex(newFocusedIndex);
+    };
+
+    return (
+      <View style={styles.rootContainer}>
+        <TextInput
+          ref={internalRef}
+          value={pin}
+          onChangeText={handleChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          maxLength={pinLength}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          style={styles.hiddenInput}
+          autoFocus={autoFocus}
+          {...rest}
+        />
+        <Pressable
+          onPress={handlePress}
+          style={[styles.container, containerStyle]}
+        >
+          {Array.from({ length: pinLength }).map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.cell,
+                cellStyle,
+                focusedIndex === index &&
+                  (styles.focusedCell, focusedCellStyle),
+              ]}
+            >
+              <Text style={[styles.cellText, cellTextStyle]}>
+                {pin[index] || ""}
+              </Text>
+            </View>
+          ))}
+        </Pressable>
+      </View>
+    );
+  }
+);
+
+PinInput.displayName = "PinInput";
 
 const styles = StyleSheet.create({
   rootContainer: {
