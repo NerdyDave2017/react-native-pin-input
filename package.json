@@ -1,6 +1,9 @@
 {
   "name": "@nerdydave2017/react-native-pin-input",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "A fully accessible and customizable PIN input component for React Native, built with a single hidden TextInput for a native-like experience.",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
