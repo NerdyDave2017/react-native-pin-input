@@ -4,6 +4,10 @@ A fully accessible and customizable PIN/OTP input component for React Native.
 
 Built with a single hidden `TextInput` for a native-like experience, including keyboard management, copy-paste, and OTP autofill, without the complexity.
 
+## Demo
+
+![Demo GIF](./assets/demo.gif)
+
 ## Features
 
 - ✅ **Drop-in Replacement**: Extends `TextInputProps` so you can use it just like a native `TextInput`.
@@ -14,16 +18,18 @@ Built with a single hidden `TextInput` for a native-like experience, including k
 ## Installation
 
 ```bash
-npm install react-native-pin-input
+npm install @nerdydave2017/react-native-pin-input
 # or
-yarn add react-native-pin-input
+yarn add @nerdydave2017/react-native-pin-input
+# or
+pnpm add @nerdydave2017/react-native-pin-input
 ```
 
 ## Basic Usage
 
 ```tsx
 import React, { useState } from "react";
-import { PinInput } from "react-native-pin-input";
+import { PinInput } from "@nerdydave2017/react-native-pin-input";
 
 const MyScreen = () => {
   const [pin, setPin] = useState("");
@@ -34,6 +40,36 @@ const MyScreen = () => {
       onPinChange={setPin}
       onPinComplete={(completePin) => {
         console.log("PIN entry complete:", completePin);
+      }}
+      autoFocus
+    />
+  );
+};
+```
+
+## Styled Usage
+
+```tsx
+import React, { useState } from "react";
+import { PinInput } from "@nerdydave2017/react-native-pin-input";
+
+const MyScreen = () => {
+  const [pin, setPin] = useState("");
+
+  return (
+    <PinInput
+      pinLength={6}
+      onPinChange={setPin}
+      onPinComplete={(completePin) => {
+        console.log("PIN entry complete:", completePin);
+      }}
+      cellStyle={{
+        width: 60,
+        height: 60,
+      }}
+      focusedCellStyle={{
+        borderColor: "green",
+        borderWidth: 2,
       }}
       autoFocus
     />

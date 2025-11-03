@@ -4,6 +4,7 @@ import React, {
   useState,
   useImperativeHandle,
 } from "react";
+
 import {
   Pressable,
   StyleSheet,
@@ -16,7 +17,7 @@ import {
   type ViewStyle,
 } from "react-native";
 
-interface PinInputProps extends Omit<TextInputProps, "onChangeText"> {
+export interface PinInputProps extends Omit<TextInputProps, "onChangeText"> {
   pinLength: number;
   onPinChange?: (pin: string) => void;
   onPinComplete?: (pin: string) => void;
@@ -80,6 +81,7 @@ const PinInput = forwardRef<TextInput, PinInputProps>(
     return (
       <View style={styles.rootContainer}>
         <TextInput
+          testID="hidden-pin-input"
           ref={internalRef}
           value={pin}
           onChangeText={handleChangeText}
@@ -93,17 +95,21 @@ const PinInput = forwardRef<TextInput, PinInputProps>(
           {...rest}
         />
         <Pressable
+          testID="pin-input-container"
           onPress={handlePress}
           style={[styles.container, containerStyle]}
         >
           {Array.from({ length: pinLength }).map((_, index) => (
             <View
               key={index}
+              testID={`pin-cell-${index}`}
               style={[
                 styles.cell,
                 cellStyle,
-                focusedIndex === index &&
-                  (styles.focusedCell, focusedCellStyle),
+                focusedIndex === index && [
+                  styles.focusedCell,
+                  focusedCellStyle,
+                ],
               ]}
             >
               <Text style={[styles.cellText, cellTextStyle]}>
