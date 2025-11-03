@@ -39,7 +39,10 @@
   ],
   "author": "Mideseniordev <nerdydave2017@gmail.com>",
   "license": "MIT",
-  "repository": "git@github.com:nerdydave2017/react-native-pin-input.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nerdydave2017/react-native-pin-input.git"
+  },
   "bugs": {
     "url": "https://github.com/nerdydave2017/react-native-pin-input/issues"
   },
