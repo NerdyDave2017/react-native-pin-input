@@ -10,8 +10,8 @@
       }
     },
     "hooks": {
-      "before:init": ["npm run lint", "npm test"],
-      "after:bump": "npm run prepare"
+      "before:init": ["pnpm run lint", "pnpm test"],
+      "after:bump": "pnpm run prepare"
     }
   }
 }
