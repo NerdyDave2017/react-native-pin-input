@@ -60,8 +60,8 @@ describe("PinInput", () => {
 
   it("focuses the hidden input when the cell container is pressed", () => {
     renderPinInput({ autoFocus: false });
-    const hiddenInput = screen.getByTestId("hidden-pin-input");
-    const container = screen.getByTestId("pin-input-container");
+    // const hiddenInput = screen.getByTestId("hidden-pin-input");
+    // const container = screen.getByTestId("pin-input-container");
 
     // Figure out how to test this
   });

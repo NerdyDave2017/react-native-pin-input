@@ -1,0 +1,17 @@
+{
+  "release-it": {
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md"
+      }
+    },
+    "hooks": {
+      "before:init": ["npm run lint", "npm test"],
+      "after:bump": "npm run prepare"
+    }
+  }
+}
